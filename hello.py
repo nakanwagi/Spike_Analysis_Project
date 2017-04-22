@@ -2,3 +2,5 @@
 
 
 print("Hello People")
+
+print("My Friend")
