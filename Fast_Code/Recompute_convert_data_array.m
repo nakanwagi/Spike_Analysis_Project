@@ -31,7 +31,11 @@ dt = MaxTime/Nrows; %time step in [s];
 %-1*ones(4,5);
 %data(1,1:length(x{2}))) = x{2};
 
-time = tstart:dt:tend-dt; %initialize a time vector to index rows of prevtime/nextime
+insert_start = mean_PrevTime; % insert time at beginning of experiment
+insert_end = time(end)+mean_NextTime; %insert spike time at end of experiment
+
+%initialize a time vector to index rows of prevtime/nextime
+time = [insert_start tstart:dt:tend-dt insert_end]; 
 idx = zeros(length(time), ncols); %matrix for prevtime logicals
 idx2 = zeros(length(time), ncols); %matrix for next time logicals
 prevtime = zeros(length(time), ncols); %initialize the prevtime vector
