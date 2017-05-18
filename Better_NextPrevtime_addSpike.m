@@ -28,7 +28,7 @@ speed = 2*pi/T_lap; %speed of the rat (~~ 4.2 rads/sec)
 %%Question:   ========= Is it possible for dt in FireRate to be different 
 %%============= from the DT in isSpike?==================================
 
-
+X2 =  bsxfun(@times, heaviside(time)',((1/tau)*exp(-abs(prevtime)/tau)));
 dt = 0.0015;         %0.00001;   % in [s] 
 %divide the time vector into very small intervals in [sec]
 % so that the poisson process is approximately bernouli since dt<<<1.
@@ -177,7 +177,7 @@ prevtime = nan(length(time), ncols);  % loop over all brain states
 nextime = nan(length(time), ncols); % to check what happens at a single brain state
 %NextTime = (time of next spike after time t) - t.
 
-%=========================================================================
+%=========================================================================X2 =  bsxfun(@times, heaviside(time)',((1/tau)*exp(-abs(prevtime)/tau)));
 %NextTime = nan(1, nCols);  %loop over all brain states
 %=========================================================================
 

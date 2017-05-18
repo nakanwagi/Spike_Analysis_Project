@@ -1,0 +1,376 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Convert_data_matrix_array</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-05-03"><meta name="DC.source" content="Convert_data_matrix_array.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Clear workspace, command window and close figures</a></li><li><a href="#2">Redish Lab spike data is sd.S</a></li><li><a href="#3">Find the length of the longest spike train to convert</a></li><li><a href="#4">Store all the real spike data into a matrix/2D array</a></li><li><a href="#8">Compute the mean of PrevTime and NextTime along the time dimension</a></li><li><a href="#9">Now, re-calculate the PrevTime and NextTime as before;</a></li></ul></div><h2>Clear workspace, command window and close figures<a name="1"></a></h2><pre class="codeinput">close <span class="string">all</span>;
+clc;
+</pre><h2>Redish Lab spike data is sd.S<a name="2"></a></h2><pre class="codeinput">disp(<span class="string">'reading raw data'</span>);tic;
+
+sd = TaskInit(<span class="string">'/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'</span>); <span class="comment">%load the spike data</span>
+Spikes = sd.S; <span class="comment">%get spikes cells from the struct sd</span>
+
+toc;
+
+<span class="comment">% %% Plot the Spike Data to visualize</span>
+<span class="comment">% %  Q = MakeQfromS(Spikes, 1); %bin width dt = 0.5  %0.1 ms</span>
+<span class="comment">%  DT = 0.05;</span>
+<span class="comment">%  sigma = 1;</span>
+<span class="comment">%</span>
+<span class="comment">%  Q = MakeQfromS_spreadSpikes(Spikes, DT, sigma); %bin width dt = 0.5  %0.1 ms</span>
+<span class="comment">%</span>
+<span class="comment">%  %Q = MakeQfromS(Spikes, 1); %bin width dt = 0.5  %0.1 ms</span>
+<span class="comment">%</span>
+<span class="comment">%  Data = Q.D;</span>
+<span class="comment">%</span>
+<span class="comment">%  Data = full(Data);</span>
+<span class="comment">%</span>
+<span class="comment">%  %visualize the data</span>
+<span class="comment">%  figure(1);</span>
+<span class="comment">%  imagesc(Q.range, 1:32, Q.data');</span>
+<span class="comment">%  title('image of firing rates data');</span>
+<span class="comment">%</span>
+<span class="comment">%  %plot the data with the bursting neuron 8 in red.</span>
+<span class="comment">%  figure(2);</span>
+<span class="comment">%   plot(sd.x.data, sd.y.data, '.', sd.x.data(sd.S{12}), sd.y.data(sd.S{12}), 'ro');</span>
+<span class="comment">%  title('bursting neurons in red and the rest of the data');</span>
+<span class="comment">%</span>
+<span class="comment">% %  tsd(Q); %gives the data with rows as spike times and columns as neurons</span>
+<span class="comment">% %</span>
+<span class="comment">% %  sd.S{8}; %refers to the 8th spike (T=5361 means this neuron spikes this frequently)</span>
+</pre><pre class="codeoutput">reading raw data
+Elapsed time is 0.201984 seconds.
+</pre><h2>Find the length of the longest spike train to convert<a name="3"></a></h2><p>all logical arrays into matrices</p><pre class="codeinput">disp(<span class="string">'find the length of the longest spike train'</span>); tic;
+nrows = zeros(32, 1);
+<span class="keyword">for</span> i = 1:32
+    nrows(i) = length(sd.S{i}.T);
+<span class="keyword">end</span>
+Nrows = max(nrows);
+toc;
+</pre><pre class="codeoutput">find the length of the longest spike train
+Elapsed time is 0.002786 seconds.
+</pre><h2>Store all the real spike data into a matrix/2D array<a name="4"></a></h2><pre class="codeinput">disp(<span class="string">'converting real data from cells to a matrix'</span>);tic;
+RealData = nan(Nrows, length(Spikes));
+<span class="keyword">for</span> i = 1:length(Spikes)
+    RealData(1:length(Spikes{i}.T), i) =  Spikes{i}.T;
+<span class="keyword">end</span>
+toc;
+</pre><pre class="codeoutput">converting real data from cells to a matrix
+Elapsed time is 0.006467 seconds.
+</pre><pre class="codeinput">disp(<span class="string">'initializing variables, dt in [s]'</span>);tic;
+
+<span class="comment">% Limit spiking to time on and off track</span>
+tstart = sd.ExpKeys.TimeOnTrack; <span class="comment">%start time in [s] of the real experiment</span>
+tend = sd.ExpKeys.TimeOffTrack; <span class="comment">%end time in [s] of the real experiment</span>
+ncols = size(RealData, 2); <span class="comment">%number of neurons or columns in the data</span>
+
+MaxTime = (tend - tstart); <span class="comment">%Duration of the experiment.</span>
+dt = 0.10; <span class="comment">%MaxTime/Nrows; %time step in [s];</span>
+
+<span class="comment">%disp(min(unique(time) == time));</span>
+<span class="comment">%-1*ones(4,5);</span>
+<span class="comment">%data(1,1:length(x{2}))) = x{2};</span>
+
+time = tstart:dt:tend-dt; <span class="comment">%initialize a time vector to index rows of prevtime/nextime</span>
+idx = zeros(size(RealData,1), ncols); <span class="comment">%matrix for prevtime logicals</span>
+idx2 = zeros(size(RealData,1), ncols); <span class="comment">%matrix for next time logicals</span>
+prevtime = zeros(length(time), ncols); <span class="comment">%initialize the prevtime vector</span>
+nextime = nan(length(time), ncols);<span class="comment">%initialize the nextime vector</span>
+tmp = zeros(length(time), ncols); <span class="comment">% store indices of idx in tmp matrix</span>
+tmp2 = nan(length(time), ncols); <span class="comment">% store indices of idx2 in tmp2 matrix</span>
+toc;
+</pre><pre class="codeoutput">initializing variables, dt in [s]
+Elapsed time is 0.010516 seconds.
+</pre><pre class="codeinput">disp(<span class="string">'computing prevtime/nextime'</span>);tic;
+
+<span class="keyword">for</span> i = 1:length(time)
+  <span class="keyword">for</span> j = 1:ncols
+
+      <span class="comment">% look for elements &lt;/&gt; time respectively</span>
+
+        idx(:,j) =  RealData(:,j)  &lt;  time(i);
+        idx2(:,j) =  RealData(:,j) &gt;  time(i);
+
+    <span class="keyword">if</span> (sum(idx(:,j))~=0)  <span class="comment">% exclude empty arrays</span>
+
+   <span class="comment">%save the indices corresponding to non-empty arrays from from idx into tmp</span>
+   count = nnz(~isnan(RealData(:,j))); <span class="comment">%count the number of non_NAN values in each column</span>
+    tmp =   max(RealData(find(idx(1:count, j)), j)); <span class="comment">%choose the maximum number satisfying the idx condition</span>
+
+   <span class="comment">% compute prevtime</span>
+   prevtime(i,j) = tmp-time(i);
+
+        <span class="keyword">else</span>
+          prevtime(i,j) = nan;
+    <span class="keyword">end</span>
+
+    <span class="comment">%repeat the same exact proceedure above for nextime</span>
+    <span class="keyword">if</span> (sum(idx2(:,j))~=0)
+
+   count2 = nnz(~isnan(RealData(:,j))); <span class="comment">%count the number of non_NAN values in each column</span>
+  tmp2 =   min(RealData(find(idx2(1:count2, j)), j)); <span class="comment">%choose the minimum number satisfying the idx2 condition</span>
+
+  <span class="comment">%compute nextime</span>
+  nextime(i,j) = tmp2-time(i);
+
+        <span class="keyword">else</span>
+          nextime(i,j) = nan;
+    <span class="keyword">end</span>
+
+
+
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+toc;
+</pre><pre class="codeoutput">computing prevtime/nextime
+Elapsed time is 794.020000 seconds.
+</pre><pre class="codeinput">disp(<span class="string">'removing nans from prevtime/nextime'</span>);tic;
+</pre><pre class="codeoutput">removing nans from prevtime/nextime
+</pre><h2>Compute the mean of PrevTime and NextTime along the time dimension<a name="8"></a></h2><p>and add it to the spiketime vector cell wise.</p><pre class="codeinput">prevtime(isnan(prevtime)) = []; <span class="comment">%delete all nan values from PrevTime---indeed the sizes change!</span>
+nextime(isnan(nextime)) = []; <span class="comment">%delete all nan values from NextTime---indeed the sizes change!</span>
+<span class="comment">% before i was using the inbuilt function omitnan which is even too slow.</span>
+
+mean_PrevTime = mean(prevtime, 2);  <span class="comment">%compute mean of PrevTime without nans</span>
+mean_NextTime = mean(nextime, 2);  <span class="comment">%compute mean of NextTime without nans</span>
+
+<span class="comment">% Now add a spike before and after spiketime into each individual cell</span>
+<span class="comment">% do this by adding SpikeTimes - mean(PrevTime) at the beginning of each</span>
+<span class="comment">% cell array and then statetime(end) + mean(NextTime) at the end of each cell</span>
+<span class="comment">% array</span>
+<span class="keyword">for</span> j = 1:ncols
+    Spikes{j}.T = [time(1)+mean_PrevTime  Spikes{j}.T' time(end)+mean_NextTime];
+    <span class="comment">%insert a spike at the beginning to remove nans from prevtime.</span>
+<span class="keyword">end</span>
+
+toc;
+</pre><pre class="codeoutput">Elapsed time is 0.041236 seconds.
+</pre><h2>Now, re-calculate the PrevTime and NextTime as before;<a name="9"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+
+
+%% Clear workspace, command window and close figures
+
+close all;
+clc;
+
+%% Redish Lab spike data is sd.S
+
+disp('reading raw data');tic;
+
+sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'); %load the spike data
+Spikes = sd.S; %get spikes cells from the struct sd
+
+toc;
+
+% %% Plot the Spike Data to visualize
+% %  Q = MakeQfromS(Spikes, 1); %bin width dt = 0.5  %0.1 ms
+%  DT = 0.05;
+%  sigma = 1;
+%  
+%  Q = MakeQfromS_spreadSpikes(Spikes, DT, sigma); %bin width dt = 0.5  %0.1 ms
+%  
+%  %Q = MakeQfromS(Spikes, 1); %bin width dt = 0.5  %0.1 ms
+%  
+%  Data = Q.D;
+%  
+%  Data = full(Data);
+%  
+%  %visualize the data
+%  figure(1);
+%  imagesc(Q.range, 1:32, Q.data');
+%  title('image of firing rates data');
+%  
+%  %plot the data with the bursting neuron 8 in red.
+%  figure(2);
+%   plot(sd.x.data, sd.y.data, '.', sd.x.data(sd.S{12}), sd.y.data(sd.S{12}), 'ro');
+%  title('bursting neurons in red and the rest of the data');
+%  
+% %  tsd(Q); %gives the data with rows as spike times and columns as neurons
+% %  
+% %  sd.S{8}; %refers to the 8th spike (T=5361 means this neuron spikes this frequently)
+
+
+%% Find the length of the longest spike train to convert 
+% all logical arrays into matrices
+disp('find the length of the longest spike train'); tic;
+nrows = zeros(32, 1);
+for i = 1:32
+    nrows(i) = length(sd.S{i}.T);
+end
+Nrows = max(nrows);
+toc;
+
+%% Store all the real spike data into a matrix/2D array
+disp('converting real data from cells to a matrix');tic;
+RealData = nan(Nrows, length(Spikes));
+for i = 1:length(Spikes)
+    RealData(1:length(Spikes{i}.T), i) =  Spikes{i}.T; 
+end
+toc;
+
+%%
+disp('initializing variables, dt in [s]');tic;
+
+% Limit spiking to time on and off track
+tstart = sd.ExpKeys.TimeOnTrack; %start time in [s] of the real experiment
+tend = sd.ExpKeys.TimeOffTrack; %end time in [s] of the real experiment
+ncols = size(RealData, 2); %number of neurons or columns in the data
+
+MaxTime = (tend - tstart); %Duration of the experiment.
+dt = 0.10; %MaxTime/Nrows; %time step in [s];
+
+%disp(min(unique(time) == time));
+%-1*ones(4,5);
+%data(1,1:length(x{2}))) = x{2};
+
+time = tstart:dt:tend-dt; %initialize a time vector to index rows of prevtime/nextime
+idx = zeros(size(RealData,1), ncols); %matrix for prevtime logicals
+idx2 = zeros(size(RealData,1), ncols); %matrix for next time logicals
+prevtime = zeros(length(time), ncols); %initialize the prevtime vector
+nextime = nan(length(time), ncols);%initialize the nextime vector
+tmp = zeros(length(time), ncols); % store indices of idx in tmp matrix
+tmp2 = nan(length(time), ncols); % store indices of idx2 in tmp2 matrix
+toc;
+
+%%
+
+disp('computing prevtime/nextime');tic;
+
+for i = 1:length(time)
+  for j = 1:ncols
+  
+      % look for elements </> time respectively
+      
+        idx(:,j) =  RealData(:,j)  <  time(i);
+        idx2(:,j) =  RealData(:,j) >  time(i);
+    
+    if (sum(idx(:,j))~=0)  % exclude empty arrays
+
+   %save the indices corresponding to non-empty arrays from from idx into tmp
+   count = nnz(~isnan(RealData(:,j))); %count the number of non_NAN values in each column
+    tmp =   max(RealData(find(idx(1:count, j)), j)); %choose the maximum number satisfying the idx condition
+  
+   % compute prevtime 
+   prevtime(i,j) = tmp-time(i);
+ 
+        else
+          prevtime(i,j) = nan;
+    end
+    
+    %repeat the same exact proceedure above for nextime
+    if (sum(idx2(:,j))~=0)  
+
+   count2 = nnz(~isnan(RealData(:,j))); %count the number of non_NAN values in each column
+  tmp2 =   min(RealData(find(idx2(1:count2, j)), j)); %choose the minimum number satisfying the idx2 condition
+  
+  %compute nextime
+  nextime(i,j) = tmp2-time(i);
+ 
+        else
+          nextime(i,j) = nan;
+    end
+    
+    
+    
+  end
+end
+toc;
+
+%%
+
+disp('removing nans from prevtime/nextime');tic;
+%% Compute the mean of PrevTime and NextTime along the time dimension
+% and add it to the spiketime vector cell wise.
+
+prevtime(isnan(prevtime)) = []; %delete all nan values from PrevTimeREPLACE_WITH_DASH_DASH-indeed the sizes change!
+nextime(isnan(nextime)) = []; %delete all nan values from NextTimeREPLACE_WITH_DASH_DASH-indeed the sizes change!
+% before i was using the inbuilt function omitnan which is even too slow.
+
+mean_PrevTime = mean(prevtime, 2);  %compute mean of PrevTime without nans
+mean_NextTime = mean(nextime, 2);  %compute mean of NextTime without nans
+
+% Now add a spike before and after spiketime into each individual cell
+% do this by adding SpikeTimes - mean(PrevTime) at the beginning of each
+% cell array and then statetime(end) + mean(NextTime) at the end of each cell
+% array
+for j = 1:ncols
+    Spikes{j}.T = [time(1)+mean_PrevTime  Spikes{j}.T' time(end)+mean_NextTime]; 
+    %insert a spike at the beginning to remove nans from prevtime.
+end
+
+toc;
+%% Now, re-calculate the PrevTime and NextTime as before;
+
+
+
+
+
+
+
+              
+
+##### SOURCE END #####
+--></body></html>
