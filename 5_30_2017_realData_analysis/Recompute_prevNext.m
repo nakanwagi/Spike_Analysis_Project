@@ -41,8 +41,8 @@ function [prevtime, nextime] = Recompute_prevNext(NewSpikes, Dt, tstart,tend,tim
 %% Find the length of the longest spike train to convert 
 % all logical arrays into matrices
 disp('find the length of the longest spike train'); tic;
-nrows = zeros(32, 1);
-for i = 1:32
+nrows = zeros(length(NewSpikes), 1);
+for i = 1:length(NewSpikes)
     nrows(i) = length(NewSpikes{i}.T);
 end
 Nrows = max(nrows);

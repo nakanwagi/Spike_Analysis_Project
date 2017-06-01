@@ -41,8 +41,8 @@ function NewSpikes = Boundary_condition_Real(Spikes, Dt, tstart, tend, time)
 %% Find the length of the longest spike train to convert 
 % all logical arrays into matrices
 disp('find the length of the longest spike train'); tic;
-nrows = zeros(32, 1);
-for i = 1:32
+nrows = zeros(length(Spikes), 1);
+for i = 1:length(Spikes)
     nrows(i) = length(Spikes{i}.T);
 end
 Nrows = max(nrows);

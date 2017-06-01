@@ -2,7 +2,7 @@
 
 disp('run Diffusion Maps Algorithm');tic;
 
-tau = 15; %-----with noise; %0.9----no noise; 
+tau = 12; %-----with noise; %0.9----no noise; 
 
 X2 = (1/tau)*exp(-abs(prevtime)/tau);  
 
@@ -18,9 +18,9 @@ sig_d = 1; %variance of gaussian in diffusion maps (default = 1)
 
 alpha = 1; %parameter in diffusion maps (default = 1)
 
-no_dims = 2; %number of dimensions. (default = 2)
+no_dims = length(Spikes); %number of dimensions. (default = 2)
 
-%% Run diffusion Maps on clean data
+% Run diffusion Maps on clean data
  
 [mappedX2, mapping2] = compute_mapping(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
 

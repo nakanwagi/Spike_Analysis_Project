@@ -7,12 +7,12 @@ clc;
 
 disp('reading raw data');tic;
 
-%sd =
-%TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16');
-%%%load the spike data ----2011 is what is in my workspace
+%2011 data
+ sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'); %load the spike data ----2011 is what is in my workspace
 
-sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R236-2012-12-24'); %load the spike data
 
+%2012 data
+%sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R236-2012-12-24'); %load the spike data ----2011 is what is in my workspace'); %load the spike data ----2011 is what is in my workspace
 
 
 Spikes = sd.S; %get spikes cells from the struct sd
@@ -47,7 +47,7 @@ toc;
 % %  sd.S{8}; %refers to the 8th spike (T=5361 means this neuron spikes this frequently)
 
 %% Initialize the input variables.
- Dt = 0.15; % time step in [s]
+ Dt = 0.1; % time step in [s]
    % Limit spiking to time on and off track
    tstart = sd.ExpKeys.TimeOnTrack; %start time in [s] of the real experiment
    tend = sd.ExpKeys.TimeOffTrack; %end time in [s] of the real experiment
@@ -68,7 +68,7 @@ NewSpikes = Boundary_condition_Real(Spikes, Dt, tstart, tend, time);
 
 disp('run Diffusion Maps Algorithm');tic;
 
-tau = 13; %-----with noise; %0.9----no noise; 
+tau = 12; %-----with noise; %0.9----no noise; 
 
 X2 = (1/tau)*exp(-abs(prevtime)/tau);  
 
@@ -84,11 +84,11 @@ sig_d = 1; %variance of gaussian in diffusion maps (default = 1)
 
 alpha = 1; %parameter in diffusion maps (default = 1)
 
-no_dims = 2; %number of dimensions. (default = 2)
+no_dims = length(Spikes); %number of dimensions. (default = 2)
 
 %% Run diffusion Maps on clean data
  
-[mappedX2, mapping2] = compute_mapping(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
+[mappedX2, mapping2] = compute_mapping_sylvia(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
 
  
 toc;
