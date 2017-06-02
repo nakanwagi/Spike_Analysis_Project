@@ -8,11 +8,11 @@ clc;
 disp('reading raw data');tic;
 
 %2011 data
-% sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'); %load the spike data ----2011 is what is in my workspace
+ sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'); %load the spike data ----2011 is what is in my workspace
 
 
 %2012 data
-sd = TaskIni('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'); %load the spike data ----2011 is what is in my workspace'); %load the spike data ----2011 is what is in my workspace
+%sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R236-2012-12-24'); %load the spike data ----2011 is what is in my workspace'); %load the spike data ----2011 is what is in my workspace
 
 
 Spikes = sd.S; %get spikes cells from the struct sd
@@ -84,11 +84,11 @@ sig_d = 1; %variance of gaussian in diffusion maps (default = 1)
 
 alpha = 1; %parameter in diffusion maps (default = 1)
 
-no_dims = 32; %number of dimensions. (default = 2)
+no_dims = length(Spikes); %number of dimensions. (default = 2)
 
 %% Run diffusion Maps on clean data
  
-[mappedX2, mapping2] = compute_mapping(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
+[mappedX2, mapping2] = compute_mapping_sylvia(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
 
  
 toc;

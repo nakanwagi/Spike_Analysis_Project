@@ -8,11 +8,15 @@ clc;
 disp('reading raw data');tic;
 
 %2011 data
- sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'); %load the spike data ----2011 is what is in my workspace
+ % sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'); %load the spike data ----2011 is what is in my workspace
 
 
 %2012 data
-%sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R236-2012-12-24'); %load the spike data ----2011 is what is in my workspace'); %load the spike data ----2011 is what is in my workspace
+% sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R236-2012-12-24'); %load the spike data ----2011 is what is in my workspace'); %load the spike data ----2011 is what is in my workspace
+
+%2010  data
+sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R199-2010-06-11'); %load the spike data ----2011 is what is in my workspace
+
 
 
 Spikes = sd.S; %get spikes cells from the struct sd
