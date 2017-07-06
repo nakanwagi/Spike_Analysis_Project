@@ -8,7 +8,8 @@ clc;
 disp('reading raw data');tic;
 
 %2011 data
-  sd = TaskInit('/home/tesylvia/Documents/MATLAB_working_dir/David_Hippocampal_Data/R232-2011-10-16'); %load the spike data ----2011 is what is in my workspace
+  sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R232-2011-10-16'); %load the spike data ----2011 is what is in my workspace
+
 
 %2012 data
 % sd = TaskInit('/home/agwan003/Sylvia_Analysis/David_Data/R236-2012-12-24'); %load the spike data ----2011 is what is in my workspace'); %load the spike data ----2011 is what is in my workspace
@@ -39,14 +40,13 @@ toc;
  figure(1);
  imagesc(Q.range, 1:32, Q.data');
  title('image of firing rates data');
- print('Firing Rates data','-dpng');
  
  %plot the data with the bursting neuron 8 in red.
  figure(2);
   plot(sd.x.data, sd.y.data, '.', sd.x.data(sd.S{12}), sd.y.data(sd.S{12}), 'ro');
  title('bursting neurons in red and the rest of the data');
- print('Bursting neuron and the rest of the data','-dpng');
- 
+ print('RasterPlot for a multiple unit recording for  a single trial','-dpng');
+ xlabel('Spike train'); ylabel('number of neurons')
  
 %  tsd(Q); %gives the data with rows as spike times and columns as neurons
 %  

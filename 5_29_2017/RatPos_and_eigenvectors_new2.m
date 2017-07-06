@@ -24,6 +24,16 @@ for i = 1:size(mappedX2, 2) % i runs over the columns of mappedX2
 end
 
 
+figure;
+plot3(theta, mappedX2(:,1), mappedX2(:,2));
+xlabel('theta');ylabel('eigvec 1');zlabel('eigvec 2');
+print('Rat Position based on top 2 eigenvectors','-dpng');
+
+
+
+
+
+
 %% Defines position in terms of cosine and sine.
 tsd_theta = tsd(time, theta');
 x = cos(mod(tsd_theta.data, 2*pi));
@@ -39,11 +49,14 @@ yb = linspace(min(y), max(y), 2*size(mappedX2,2)); %range for y
 figure;
 plot3(time, x, y, 'b');
 title('Rat position in blue:Synthetic Data');
+print('Simulated_Theta_with_noise','-dpng');
+
 
 figure;
 plot3(x, y, eigVec{1}.data, 'r');
 xlabel('x');ylabel('y');zlabel('First Eigen Vector');
 title('Rat Position and  Eigvec 1');
+print('Projected_theta using EigVec 1','-dpng');
 
 
 % print the plot
