@@ -24,7 +24,7 @@ toc;
 
 %% Plot the Spike Data to visualize
 %  Q = MakeQfromS(Spikes, 1); %bin width dt = 0.5  %0.1 ms
- DT = 0.05;
+ DT = 0.1;
  sigma = 1;
  
  Q = MakeQfromS_spreadSpikes(Spikes, DT, sigma); %bin width dt = 0.5  %0.1 ms
@@ -76,6 +76,7 @@ disp('run Diffusion Maps Algorithm');tic;
 
 tau = 12; %-----with noise; %0.9----no noise; 
 
+
 X2 = (1/tau)*exp(-abs(prevtime)/tau);  
 
 
@@ -92,11 +93,16 @@ alpha = 1; %parameter in diffusion maps (default = 1)
 
 no_dims = length(Spikes); %number of dimensions. (default = 2)
 
-%% Run diffusion Maps on clean data
+%% Run diffusion Maps on  prevtime/nextime data
  
 [mappedX2, mapping2] = compute_mapping_sylvia(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
 
  
+
+%% Run diffusion Maps on Firing rate data
+
+[fireRate1, fireRate_struct] = compute_mapping_sylvia(Data, 'DiffusionMaps', no_dims, alpha, sig_d);
+
 toc;
 
 
