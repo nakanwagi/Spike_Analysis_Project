@@ -1,0 +1,21 @@
+  568  git push origin master
+  578  sudo dpkg -i mendeleydesktop_1.17.10-stable_amd64.deb 
+  579  sudo apt-get upgrade
+  589  git push origin master
+  594  apt-get update
+  605  sudo dpkg -i gitkraken-amd64.deb 
+  606  sudo apt-get install -f
+  607  gitkraken 
+  608  ssh -XY agwan003@sonet.math.umn.edu
+  609  ssh -XY agwan003@sonet.math.umn.edu
+  614  mv 5_29_2017/ /project/agwan003
+  618  rm -rf 5_30_2017_realData_analysis/
+  620  rm -rf Oral_2017_results/
+  632  git pull
+  644  scp -r agwan003@sonet.math.umn.edu:~/Spike_Analysis_Project/hello.py  ./Spike_Analysis_Project/
+  645  scp -r agwan003@sonet.math.umn.edu:/home/agwan003/Spike_Analysis_Project/SyntheticData/  ./Spike_Analysis_Project/
+  651  sudo rm -rf Spike_Analysis_Project/
+  652  git clone git@github.com:nakanwagi/Spike_Analysis_Project.git
+  655  git status
+  658  git pull
+  667  history 100 > bash_help_commands.log
