@@ -6,8 +6,6 @@
   605  sudo dpkg -i gitkraken-amd64.deb 
   606  sudo apt-get install -f
   607  gitkraken 
-  608  ssh -XY agwan003@sonet.math.umn.edu
-  609  ssh -XY agwan003@sonet.math.umn.edu
   614  mv 5_29_2017/ /project/agwan003
   618  rm -rf 5_30_2017_realData_analysis/
   620  rm -rf Oral_2017_results/
