@@ -114,58 +114,64 @@ no_dims = length(NewSpikes); %number of dimensions. (default = 2)
 
 % Run diffusion Maps on  prevtime/nextime data
  
-[preVdiffmap, diffStruct] = compute_mapping_sylvia(prevData, 'DiffusionMaps', no_dims, alpha, sig_d);
+[preVdiffmapL2dist, diffL2struct] = compute_mapping_sylvia(prevData, 'DiffusionMaps', no_dims, alpha, sig_d);
+
+[preVdiffmapL1dist, diffL1struct] = compute_mapping_sylaplacekernel(prevtime, 'DiffusionMaps', no_dims, alpha, sig_d);
 
 % Run diffusion Maps on Firing rate data
 
-[FRdiffmap, FRdiffStruct] = compute_mapping_sylvia(FireRate, 'DiffusionMaps', no_dims, alpha, sig_d);
+[FRdiffmapL2dist, FRdiffL2struct] = compute_mapping_sylvia(FireRate, 'DiffusionMaps', no_dims, alpha, sig_d);
 
-% Run Kernel PCA with the Gaussian Kernel on  prevtime/nextime data
- 
-[preVgKpca, gKpcaStruct] = compute_mapping_sylvia(prevData, 'KernelPCA', no_dims, 'gauss', sig_d);
+[FRdiffmapL1dist, FRdiffL1struct] = compute_mapping_sylaplacekernel(FireRate, 'DiffusionMaps', no_dims, alpha, sig_d, tau);
 
-% Run Kernel PCA  with gaussian kernel on Firing rate data
-
-[FRgKpca, FRgKpcaStruct] = compute_mapping_sylvia(FireRate, 'KernelPCA', no_dims, 'gauss', sig_d);
-
-% Run Kernel PCA with the linear Kernel on  prevtime/nextime data
- 
-[preVlKpca, lKpcaStruct] = compute_mapping_sylvia(prevData, 'KernelPCA', no_dims, 'linear', sig_d);
-
-% Run Kernel PCA  with gaussian kernel on Firing rate data
-
-[FRlKpca, FRlKpcaStruct] = compute_mapping_sylvia(FireRate, 'KernelPCA', no_dims, 'linear', sig_d);
-
-% Run Gaussian Process latent variable model on  prevtime/nextime data
- 
-[preVgplvm, gplvmStruct] = compute_mapping_sylvia(prevData, 'GPLVM', no_dims, sig_d);
-
-% Run Gaussian Process latent variable model on Firing rate data
-
-[FRgplvm, FRgplvmStruct] = compute_mapping_sylvia(FireRate,'GPLVM', no_dims, sig_d);
 
 % Run Principle Component  Analysis (PCA) on  prevtime/nextime data
 
-[prevPca, pcaStruct] = compute_mapping_sylvia(prevData, 'PCA',  no_dims);
+[prevPcaL2dist, pcaL2struct] = compute_mapping_sylvia(prevData, 'PCA',  no_dims);
 
 % Run Principle Component Analysis (PCA) on Firing rate data
 
-[FRpca, FRpcaStruct] = compute_mapping_sylvia(FireRate,'PCA',no_dims);
+[FRpcaL2dist, FRpcaL2struct] = compute_mapping_sylvia(FireRate,'PCA',no_dims);
 
-% Run Laplacian EigenMaps  (lapEig) on  prevtime/nextime data, sig_d = 1,
-% default value
 
-[prevlapEig, lapEigStruct] = compute_mapping_sylvia(prevData, 'Laplacian',  no_dims);
 
-% Run Laplacian EigenMaps (LapEig) on Firing rate data
-
-[FRlapEig, FRlapEigStruct] = compute_mapping_sylvia(FireRate,'Laplacian', no_dims);
+%Laplacian Maps is very unstable.
+% % Run Laplacian EigenMaps  (lapEig) on  prevtime/nextime data, sig_d = 1,
+% % default value
+% 
+% [prevlapEig, lapEigStruct] = compute_mapping_sylvia(prevData, 'Laplacian',  no_dims);
+% 
+% % Run Laplacian EigenMaps (LapEig) on Firing rate data
+% 
+% [FRlapEig, FRlapEigStruct] = compute_mapping_sylvia(FireRate,'Laplacian', no_dims);
 
 toc;
 
 
 
-
+% % Run Kernel PCA with the Gaussian Kernel on  prevtime/nextime data
+%  
+% [preVgKpca, gKpcaStruct] = compute_mapping_sylvia(prevData, 'KernelPCA', no_dims, 'gauss', sig_d);
+% 
+% % Run Kernel PCA  with gaussian kernel on Firing rate data
+% 
+% [FRgKpca, FRgKpcaStruct] = compute_mapping_sylvia(FireRate, 'KernelPCA', no_dims, 'gauss', sig_d);
+% 
+% % Run Kernel PCA with the linear Kernel on  prevtime/nextime data
+%  
+% [preVlKpca, lKpcaStruct] = compute_mapping_sylvia(prevData, 'KernelPCA', no_dims, 'linear', sig_d);
+% 
+% % Run Kernel PCA  with gaussian kernel on Firing rate data
+% 
+% [FRlKpca, FRlKpcaStruct] = compute_mapping_sylvia(FireRate, 'KernelPCA', no_dims, 'linear', sig_d);
+% 
+% % Run Gaussian Process latent variable model on  prevtime/nextime data
+%  
+% [preVgplvm, gplvmStruct] = compute_mapping_sylvia(prevData, 'GPLVM', no_dims, sig_d);
+% 
+% % Run Gaussian Process latent variable model on Firing rate data
+% 
+% [FRgplvm, FRgplvmStruct] = compute_mapping_sylvia(FireRate,'GPLVM', no_dims, sig_d);
 
 
  

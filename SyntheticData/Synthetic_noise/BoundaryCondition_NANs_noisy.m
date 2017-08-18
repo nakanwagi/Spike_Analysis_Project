@@ -67,8 +67,8 @@ idx = zeros(size(SyntheticData,1), Ncols); %matrix for prevtime logicals
 idx2 = zeros(size(SyntheticData,1), Ncols); %matrix for next time logicals
 prevtime = zeros(length(timevec), Ncols); %initialize the prevtime vector
 nextime = nan(length(timevec), Ncols);%initialize the nextime vector
-tmp = zeros(length(timevec), Ncols); % store indices of idx in tmp matrix
-tmp2 = nan(length(timevec), Ncols); % store indices of idx2 in tmp2 matrix
+%tmp = zeros(length(timevec), Ncols); % store indices of idx in tmp matrix
+%tmp2 = nan(length(timevec), Ncols); % store indices of idx2 in tmp2 matrix
 NewSpikes = cell(1,Ncols);
 
 

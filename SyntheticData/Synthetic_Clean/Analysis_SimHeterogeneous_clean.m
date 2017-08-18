@@ -81,13 +81,13 @@ SpikeTimes = SimHetSpikes_clean(tstart, tend, dt);
 toc;
 
 disp('Computing mean of prevtime and nextime to generate NewSpikes');tic;
-NewSpikes=BoundaryCondition_NANs_edited(SpikeTimes, dt, time, tstart, tend);
+NewSpikes=BoundaryCondition_NANs_clean(SpikeTimes, dt, time, tstart, tend);
 toc;
 
 disp('Computing clean prevtime and nextime functions for synthetic data');
 tic;
 
-[prevtime, nextime] = RecomputePrevtimeNextime_edited(NewSpikes, dt, time, tstart, tend);
+[prevtime, nextime] = RecomputePrevtimeNextime_clean(NewSpikes, dt, time, tstart, tend);
 toc;
 
 
@@ -114,7 +114,15 @@ no_dims = length(NewSpikes); %number of dimensions. (default = 2)
 
 %% Run diffusion Maps on clean data
  
-[mappedX2, mapping2] = compute_mapping_sylvia(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
+
+   %wrong application of diffusion maps
+%[mappedX2, mapping2] = compute_mapping_sylvia(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
+
+
+ %correct application of diffusion maps
+%[mappedX2, mapping2] = compute_mapping_syldissimilarity(X2, 'DiffusionMaps', no_dims, alpha, sig_d);
+
+
 
  
 toc;

@@ -1,99 +1,206 @@
 % Script by Mary Sylvia Agwang
 
 %% Load data from the 1TB projects space
+%load data for uni-modal place fields and wrong use of diffusion maps
+%load('/project/agwan003/matfiles_synthetic_noise_7_28_2017.mat');
 
-load('/project/agwan003/matfiles_synthetic_noise_7_28_2017.mat');
+%------------------------------------------------------------------------
+%load data for bi-modal place fields and wrong use of diffusion maps
+%load('/home/agwan003/Sylvia_Analysis/SyntheticOutput/groundtruth.mat'); %actual rat position (ground truth)
+%load('/home/agwan003/Spike_Analysis_Project/SyntheticData/Synthetic_noise/WrongDiffmap.mat'); %load PCA/Diffmaps?Laplacian output
+
 
 %% Mutual  Information  for PCA on Simulated Firing Rate
 % First Convert the eigenvectors to tsd objects stored in cells
 % EV stands for eigen vector
 
 
-FRpcaEV = cell(1, size(FRpca,2)); %FRpca is pca on simulated noisy FireRate
-for i = 1:size(FRpca, 2) % i runs over the columns of mappedX2
-    FRpcaEV{i} = tsd(time, FRpca(:,i));
+FRpcaEV = cell(1, size(FRpcaL2dist,2)); %FRpca is pca on simulated noisy FireRate
+for i = 1:size(FRpcaL2dist, 2) % i runs over the columns of mappedX2
+    FRpcaEV{i} = tsd(time, FRpcaL2dist(:,i));
+    
 end
 
 figure;
-a1 = subplot(2, 2, 1);
-plot3(theta, FRpca(:,1), FRpca(:,2));
+plot3(theta, FireRate(:,1), FireRate(:,2));
+xlabel('theta');ylabel('FR column1');zlabel('FR column2');
+title('SimRatPos and 2 columns of FiringRate');
+
+
+% figure;
+% plot3(theta, FRpcaL2dist(:,1), FRpcaL2dist(:,2));
+% xlabel('theta');ylabel('eigvec 1');zlabel('eigvec 2');
+% title('SimRatPos and top 2 eigvecs from simFRpcaL2dist');
+
+figure;
+plot(FRpcaL2dist(:,1), FRpcaL2dist(:,2));
+xlabel('FRpca column1');ylabel('FRpca column2');
+title('2 eigvecs of PCA on FireRate');
+
+%------------------------------------------------------------------------
+
+
+
+
+
+
+
+figure;
+plot(FRdiffmapL2dist(:,1), FRdiffmapL2dist(:,2));
+xlabel('FR column1');ylabel('FR column2');
+title('2  eigvecs of diffmapL2dist on FireRate');
+
+%---------------------------------------------------------------------
+
+
+
+figure;
+plot3(theta, prevPcaL2dist(:,1), prevPcaL2dist(:,2));
 xlabel('theta');ylabel('eigvec 1');zlabel('eigvec 2');
-title(a1, 'SimRatPos and top 2 eigvecs from simFRpca');
-
-
-% Defines position in terms of cosine and sine.
-tsd_theta = tsd(time, theta');
-x = cos(mod(tsd_theta.data, 2*pi));
-y = sin(mod(tsd_theta.data, 2*pi));
-
-
-%define max and min for input in histcn
-xb = linspace(min(x), max(x), 2*size(FRpca,2)); %range for x
-yb = linspace(min(y), max(y), 2*size(FRpca,2)); %range for y
-
-
-% plot the rat position using only the top eigenvector
-a2 = subplot(2, 2, 2);
-plot3(time, x, y, 'b');
-xlabel('time'); ylabel('cos(modtheta)'); zlabel('sin(modtheta)');
-title(a2,'Sim Pos and time:SimFRpca'); %SimFRpca stands for pca on simulated noisy FireRate
+title('SimRatPos and top 2 eigvecs from prevPcaL2dist');
 
 
 
-a3 = subplot(2, 2, 3);
-plot3(x, y, FRpcaEV{1}.data, 'r');
-xlabel('cos(modtheta)');ylabel('sin(modtheta)');zlabel('1st eigvec');
-title(a3, 'Sim Pos and 1st eigvec');
-%projected theta using 1st eig vec from pca on Simulated noisy FireRate 
+figure;
+plot(prevtime(:,1), prevtime(:,2));
+xlabel('prevtime column1');ylabel('prevtime column2');
+title('2 columns of prevtime');
 
 
-% Compute the Mutual_Information for each of the 32 eigenvectors
-disp('computing Mutual Information for SimFRpca'); tic;
-
-H_simFRpca=cell(1,32);
-MI_simFRpca = cell(1,32);
-Hnew_simFRpca = cell(1,32);
-
-for iV = 1:size(FRpca, 2);
-    % I have only put 10 because it's easy to see the contributions of
-    % each eigenvector on submatrix plot
-    % EV_FRpca stands for eivectors from pca
-EV_FRpca = linspace(min(FRpcaEV{iV}.data), max(FRpcaEV{iV}.data), length(time));
-    %compute a 3D hsitogram to estimate the joint entropy
-    H_simFRpca{iV} = histcn([x, y, FRpcaEV{iV}.data],xb, yb, EV_FRpca);
-    % compute the normalizing constant;
-
-% Matricize the  3D tensor (Histogram)  to speed up MATLAB computations
-
-Hnew_simFRpca{iV} = reshape(H_simFRpca{iV}, [], size(H_simFRpca{iV},3)); %convert to 64^2*length(x.data)
-%remove zeros so that log2 is defined
-Hnew_simFRpca{iV}(Hnew_simFRpca{iV}==0)=nan;  %set all zero values to nans.
+figure;
+plot(prevPcaL2dist(:,1), prevPcaL2dist(:,2));
+xlabel('FR column1');ylabel('FR column2');
+title('2 eigvecs of PCA on prevtime');
 
 
-Hnew_simFRpca{iV} = Hnew_simFRpca{iV}./nansum(nansum(nansum(Hnew_simFRpca{iV}))); %normalize the probabilities
+%-------------------------------------------------------------------------
 
 
-lh1 = log2(nansum(Hnew_simFRpca{iV},1));
-lh2 = log2(nansum(Hnew_simFRpca{iV},2));
-MI_simFRpca{iV} = nansum(nansum(Hnew_simFRpca{iV} .* bsxfun(@minus,bsxfun(@minus,log2(Hnew_simFRpca{iV}),lh1),lh2)));
-
-end
-
-% Create a Mutual Information vector by concatenating all the mutual Information
-MI_simFRpca = cat(1, MI_simFRpca{:});
 
 
-% Now plot the Mutual information
-a4 = subplot(2, 2, 4);
-p = plot(MI_simFRpca);
-p.Marker = 'square';
-xlabel('Eigen vector index'); ylabel('Mutual Information');
-title(a4, 'Mutual Info Vs Eigindx : SimFRpca');
-grid on;
+% figure;
+% plot3(theta, preVdiffmapL2dist(:,1), preVdiffmapL2dist(:,2));
+% xlabel('theta');ylabel('eigvec 1');zlabel('eigvec 2');
+% title(a2,'SimRatPos and top 2 eigvecs from simPreVdiffmapL2dist');
 
-print( 'MI on SimNoisyFRpca','-dpng');
 
-toc;
+
+figure;
+plot(preVdiffmapL2dist(:,1), preVdiffmapL2dist(:,2));
+xlabel('preVdiffmapL2 column1');ylabel('preVdiffmapL2 column2');
+title('2  eigvecs of diffmapL2dist on prevtime');
+
+
+%--------------------------------------------------------------------------
+% figure;
+% plot3(theta, preVdiffmapL1dist(:,1), preVdiffmapL1dist(:,2));
+% xlabel('theta');ylabel('eigvec 1');zlabel('eigvec 2');
+% title('SimRatPos and top 2 eigvecs from simPreVdiffmapL1dist');
+
+
+
+
+figure;
+plot(preVdiffmapL1dist(:,1), preVdiffmapL1dist(:,2));
+xlabel('eigenvector 1');ylabel('eigenvector 2');
+title('LaplaceKernel on prevtime for sum of gaussian fields');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% figure;
+% a1 = subplot(2, 2, 1);
+% plot3(theta, FRpca(:,1), FRpca(:,2));
+% xlabel('theta');ylabel('eigvec 1');zlabel('eigvec 2');
+% title(a1, 'SimRatPos and top 2 eigvecs from simFRpca');
+% 
+% 
+% % Defines position in terms of cosine and sine.
+% tsd_theta = tsd(time, theta');
+% x = cos(mod(tsd_theta.data, 2*pi));
+% y = sin(mod(tsd_theta.data, 2*pi));
+% 
+% 
+% %define max and min for input in histcn
+% xb = linspace(min(x), max(x), 2*size(FRpca,2)); %range for x
+% yb = linspace(min(y), max(y), 2*size(FRpca,2)); %range for y
+% 
+% 
+% % plot the rat position using only the top eigenvector
+% a2 = subplot(2, 2, 2);
+% plot3(time, x, y, 'b');
+% xlabel('time'); ylabel('cos(modtheta)'); zlabel('sin(modtheta)');
+% title(a2,'Sim Pos and time:SimFRpca'); %SimFRpca stands for pca on simulated noisy FireRate
+% 
+% 
+% 
+% a3 = subplot(2, 2, 3);
+% plot3(x, y, FRpcaEV{1}.data, 'r');
+% xlabel('cos(modtheta)');ylabel('sin(modtheta)');zlabel('1st eigvec');
+% title(a3, 'Sim Pos and 1st eigvec');
+% %projected theta using 1st eig vec from pca on Simulated noisy FireRate 
+% 
+% 
+% % Compute the Mutual_Information for each of the 32 eigenvectors
+% disp('computing Mutual Information for SimFRpca'); tic;
+% 
+% H_simFRpca=cell(1,32);
+% MI_simFRpca = cell(1,32);
+% Hnew_simFRpca = cell(1,32);
+% 
+% for iV = 1:size(FRpca, 2);
+%     % I have only put 10 because it's easy to see the contributions of
+%     % each eigenvector on submatrix plot
+%     % EV_FRpca stands for eivectors from pca
+% EV_FRpca = linspace(min(FRpcaEV{iV}.data), max(FRpcaEV{iV}.data), length(time));
+%     %compute a 3D hsitogram to estimate the joint entropy
+%     H_simFRpca{iV} = histcn([x, y, FRpcaEV{iV}.data],xb, yb, EV_FRpca);
+%     % compute the normalizing constant;
+% 
+% % Matricize the  3D tensor (Histogram)  to speed up MATLAB computations
+% 
+% Hnew_simFRpca{iV} = reshape(H_simFRpca{iV}, [], size(H_simFRpca{iV},3)); %convert to 64^2*length(x.data)
+% %remove zeros so that log2 is defined
+% Hnew_simFRpca{iV}(Hnew_simFRpca{iV}==0)=nan;  %set all zero values to nans.
+% 
+% 
+% Hnew_simFRpca{iV} = Hnew_simFRpca{iV}./nansum(nansum(nansum(Hnew_simFRpca{iV}))); %normalize the probabilities
+% 
+% 
+% lh1 = log2(nansum(Hnew_simFRpca{iV},1));
+% lh2 = log2(nansum(Hnew_simFRpca{iV},2));
+% MI_simFRpca{iV} = nansum(nansum(Hnew_simFRpca{iV} .* bsxfun(@minus,bsxfun(@minus,log2(Hnew_simFRpca{iV}),lh1),lh2)));
+% 
+% end
+% 
+% % Create a Mutual Information vector by concatenating all the mutual Information
+% MI_simFRpca = cat(1, MI_simFRpca{:});
+% 
+% 
+% % Now plot the Mutual information
+% a4 = subplot(2, 2, 4);
+% p = plot(MI_simFRpca);
+% p.Marker = 'square';
+% xlabel('Eigen vector index'); ylabel('Mutual Information');
+% title(a4, 'Mutual Info Vs Eigindx : SimFRpca');
+% grid on;
+% 
+% print( 'MI on SimNoisyFRpca','-dpng');
+% 
+% toc;
 
 
 %% Compute the Mutual Information.

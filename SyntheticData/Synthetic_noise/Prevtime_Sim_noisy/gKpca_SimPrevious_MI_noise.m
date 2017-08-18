@@ -15,10 +15,10 @@ for i = 1:size(preVgKpca, 2) % i runs over the columns of preVgKpca
 end
 
 figure;
-a1 = subplot(2, 2, 1);
 plot3(theta, preVgKpca(:,1), preVgKpca(:,2));
 xlabel('theta');ylabel('eigvec 1');zlabel('eigvec 2');
-title(a1, 'SimRatPos and top 2 eigvecs from simPreVgKpca');
+title('SimRatPos and top 2 eigvecs from simPreVgKpca');
+print( 'MI_on_SimNoisyPreVgKpca1','-depsc');
 
 
 % Defines position in terms of cosine and sine.
@@ -33,17 +33,19 @@ yb = linspace(min(y), max(y), 2*size(preVgKpca,2)); %range for y
 
 
 % plot the rat position using only the top eigenvector
-a2 = subplot(2, 2, 2);
+figure;
 plot3(time, x, y, 'b');
 xlabel('time'); ylabel('cos(modtheta)'); zlabel('sin(modtheta)');
-title(a2,'Sim Pos and time:PreVgKpca'); %SimFRpca stands for pca on simulated noisy prevtime
+title('Sim Pos and time:PreVgKpca'); %SimFRpca stands for pca on simulated noisy prevtime
+print( 'MI_on_SimNoisyPreVgKpca2','-depsc');
 
 
-
-a3 = subplot(2, 2, 3);
+figure;
 plot3(x, y, preVgKpcaEV{1}.data, 'r');
 xlabel('cos(modtheta)');ylabel('sin(modtheta)');zlabel('1st eigvec');
-title(a3, 'Sim Pos and 1st eigvec');
+title('Sim Pos and 1st eigvec');
+print( 'MI_on_SimNoisyPreVgKpca3','-depsc');
+
 %projected theta using 1st eig vec from pca on Simulated noisy prevtime 
 
 
@@ -84,14 +86,14 @@ MI_simPreVgKpca = cat(1, MI_simPreVgKpca{:});
 
 
 % Now plot the Mutual information
-a4 = subplot(2, 2, 4);
+figure;
 p = plot(MI_simPreVgKpca);
 p.Marker = 'square';
 xlabel('Eigen vector index'); ylabel('Mutual Information');
-title(a4, 'Mutual Info Vs Eigindx : SimPreVgKpca');
+title('Mutual Info Vs Eigindx : SimPreVgKpca');
 grid on;
 
-print( 'MI_on_SimNoisyPreVgKpca','-dpdf');
+print( 'MI_on_SimNoisyPreVgKpca4','-depsc');
 
 toc;
 
